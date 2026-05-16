@@ -94,3 +94,28 @@ el prototipo de 3 nodos con Tailscale y verificar que el sistema
 completo funciona end-to-end.
 
 Ver documentación completa en: `ia-distribuida-v3.html`
+
+🛠️ Evolución de la Arquitectura: Fase 1 (En Desarrollo)
+Originalmente planteada como una red desde cero, la arquitectura ha evolucionado para aprovechar la potencia de Exo como motor de inferencia distribuida, añadiendo una capa de control soberana basada en redes ISP.
+
+1. El Motor: Exo Integration
+
+Utilizaremos Exo para el "sharding" de modelos entre dispositivos (MacOS, Linux, iOS). Exo proporciona el músculo computacional, permitiendo que el Acueducto escale sin necesidad de servidores centralizados.
+
+2. El Sistema Inmune: Proxy Ω
+
+Sobre Exo, implementaremos un Middleware Proxy que actúa como una aduana semántica:
+
+Validación en Tiempo Real: Cada respuesta de los nodos es analizada por nuestra métrica Ω (validada al 95%) antes de llegar al usuario.
+
+Protocolo FIX: Los mensajes se empaquetan bajo el estándar de mensajería financiera FIX para asegurar trazabilidad y auditoría total de cada fragmento.
+
+3. Infraestructura de Red (Basado en ia-distribuida-v3.html)
+
+Para garantizar la resiliencia, el proyecto hereda conceptos de redes de nivel ISP:
+
+Capa de Transporte: Uso de VPNs Mesh (Tailscale/WireGuard) para crear un túnel seguro entre nodos voluntarios.
+
+Ruteo Dinámico (ACO): Implementación de algoritmos de colonia de hormigas para priorizar rutas a través de nodos con mayor historial de honestidad.
+
+Hardware Ready: El diseño contempla la integración en equipos MikroTik/Cisco para una gestión de tráfico eficiente mediante protocolos como OSPF adaptados.
