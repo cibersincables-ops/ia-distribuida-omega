@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paper · Cristian Cano González · Traducción al Español</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060810;
+  --bg2: #0d1020;
+  --bg3: #131728;
+  --accent: #4f8ef7;
+  --accent2: #7fd4a0;
+  --gold: #f0c060;
+  --text: #dde3f0;
+  --text2: #8892aa;
+  --text3: #505870;
+  --border: rgba(79,142,247,0.15);
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Lora', serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+/* ── PARTÍCULAS DE FONDO ── */
+.particles {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  animation: float linear infinite;
+}
+@keyframes float {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 0.4; }
+  90% { opacity: 0.1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* ── GRILLA DE FONDO ── */
+.grid-bg {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(79,142,247,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79,142,247,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ── CONTENIDO ── */
+.content { position: relative; z-index: 1; }
+
+/* ── HERO / PORTADA ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center;
+  padding: 60px 40px;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(79,142,247,0.08), transparent);
+  pointer-events: none;
+}
+.hero-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 28px;
+  animation: fadeDown 0.8s ease 0.2s both;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 16px;
+  animation: fadeDown 0.8s ease 0.4s both;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-sub {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--text2);
+  margin-bottom: 40px;
+  animation: fadeDown 0.8s ease 0.6s both;
+}
+.hero-meta {
+  display: flex; gap: 32px; flex-wrap: wrap; justify-content: center;
+  animation: fadeDown 0.8s ease 0.8s both;
+}
+.meta-item { text-align: center; }
+.meta-item .label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text3);
+  display: block;
+  margin-bottom: 4px;
+}
+.meta-item .value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text2);
+}
+
+/* AUC GRANDE */
+.auc-hero {
+  margin: 48px 0;
+  animation: fadeDown 0.8s ease 1.0s both;
+}
+.auc-number {
+  font-family: var(--font-display);
+  font-size: clamp(72px, 12vw, 140px);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+.auc-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--accent2);
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(127,212,160,0.3)); }
+  50% { filter: drop-shadow(0 0 40px rgba(127,212,160,0.6)); }
+}
+
+/* ── SCROLL INDICATOR ── */
+.scroll-indicator {
+  position: absolute; bottom: 40px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  animation: fadeDown 1s ease 1.5s both;
+}
+.scroll-indicator span {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+.scroll-line {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scroll-pulse 2s ease-in-out infinite;
+}
+@keyframes scroll-pulse {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50% { transform: scaleY(0.5); opacity: 0.4; }
+}
+
+/* ── SECCIONES ── */
+.section {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 80px 40px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.5vw, 38px);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 28px;
+  line-height: 1.2;
+}
+.section h3 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--accent);
+  margin: 32px 0 14px;
+}
+.section p {
+  color: var(--text2);
+  margin-bottom: 18px;
+  font-size: 15.5px;
+}
+.divider {
+  width: 60px; height: 2px;
+  background: linear-gradient(to right, var(--accent), transparent);
+  margin-bottom: 28px;
+}
+
+/* ── ABSTRACT BOX ── */
+.abstract-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 28px 32px;
+  margin: 28px 0;
+  position: relative;
+}
+.abstract-box::before {
+  content: '"';
+  font-family: var(--font-display);
+  font-size: 80px;
+  color: var(--accent);
+  opacity: 0.15;
+  position: absolute;
+  top: -10px; left: 16px;
+  line-height: 1;
+}
+.abstract-box p {
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+/* ── FÓRMULA ── */
+.formula-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin: 24px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.formula-box::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(79,142,247,0.05), transparent);
+}
+.formula-main {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--accent);
+  margin-bottom: 14px;
+  position: relative;
+}
+.formula-desc {
+  font-size: 13px;
+  color: var(--text3);
+  line-height: 1.7;
+  position: relative;
+}
+.formula-desc strong { color: var(--text2); }
+
+/* ── TABLA ── */
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 13px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.results-table th {
+  background: rgba(79,142,247,0.12);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.results-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--text2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.results-table tr:hover td { background: rgba(79,142,247,0.04); }
+.results-table td:first-child { color: var(--text); font-weight: 500; }
+.pass { color: var(--accent2) !important; font-weight: 700 !important; }
+.fail { color: #f07070 !important; }
+
+/* ── RESULTADO PRINCIPAL ── */
+.result-card {
+  background: linear-gradient(135deg, rgba(127,212,160,0.08), rgba(79,142,247,0.08));
+  border: 1px solid rgba(127,212,160,0.25);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  margin: 28px 0;
+  position: relative;
+  overflow: hidden;
+}
+.result-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(127,212,160,0.1), transparent 60%);
+}
+.result-card .big-num {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--accent2);
+  line-height: 1;
+  position: relative;
+}
+.result-card .label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--accent2);
+  text-transform: uppercase;
+  margin-top: 6px;
+  position: relative;
+}
+.result-card .veredicto {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent2);
+  margin-top: 14px;
+  position: relative;
+}
+
+/* ── INSIGHT ── */
+.insight {
+  border-left: 2px solid var(--gold);
+  padding: 14px 20px;
+  background: rgba(240,192,96,0.05);
+  border-radius: 0 8px 8px 0;
+  margin: 20px 0;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text2);
+}
+.insight strong { color: var(--gold); font-style: normal; }
+
+/* ── COMPARATIVA ── */
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.comp-card {
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.comp-card.before {
+  background: rgba(240,112,112,0.07);
+  border: 1px solid rgba(240,112,112,0.2);
+}
+.comp-card.after {
+  background: rgba(127,212,160,0.07);
+  border: 1px solid rgba(127,212,160,0.2);
+}
+.comp-card .title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: block;
+}
+.comp-card.before .title { color: #f07070; }
+.comp-card.after .title { color: var(--accent2); }
+.comp-card ul { padding-left: 16px; }
+.comp-card li { margin-bottom: 5px; color: var(--text2); }
+
+/* ── REFERENCIAS ── */
+.ref-list {
+  list-style: none;
+  margin: 16px 0;
+}
+.ref-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 13px;
+  color: var(--text2);
+  font-family: var(--font-mono);
+  line-height: 1.6;
+}
+.ref-list li:last-child { border-bottom: none; }
+.ref-num { color: var(--accent); margin-right: 10px; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 60px 40px;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.footer-auc {
+  font-family: var(--font-display);
+  font-size: 80px;
+  font-weight: 900;
+  color: var(--bg3);
+  -webkit-text-stroke: 1px var(--border);
+  line-height: 1;
+  margin-bottom: 20px;
+}
+.footer p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+/* ── BARRA DE PROGRESO ── */
+.progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--accent2), var(--accent));
+  z-index: 1000;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ── NAV LATERAL ── */
+.nav-dots {
+  position: fixed; right: 24px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 12px;
+  z-index: 100;
+}
+.nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text3);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.nav-dot.active {
+  background: var(--accent);
+  transform: scale(1.5);
+}
+
+/* ── ANIMACIONES ── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── CONTADOR ANIMADO ── */
+.counter { display: inline-block; }
+
+/* ── BARRA DE AUC ── */
+.auc-bar-wrap {
+  margin: 20px 0;
+  background: var(--bg3);
+  border-radius: 99px;
+  height: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.auc-bar {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(to right, var(--accent2), var(--accent));
+  width: 0%;
+  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.auc-bar-label {
+  display: flex; justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+
+@media (max-width: 600px) {
+  .comparison { grid-template-columns: 1fr; }
+  .nav-dots { display: none; }
+  .hero h1 { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Barra de progreso -->
+<div class="progress-bar" id="progress"></div>
+
+<!-- Nav lateral -->
+<div class="nav-dots" id="navDots"></div>
+
+<!-- Partículas -->
+<div class="particles" id="particles"></div>
+<div class="grid-bg"></div>
+
+<div class="content">
+
+<!-- HERO -->
+<section class="hero" id="s0">
+  <div class="hero-label">Traducción al español · Preprint 2026</div>
+  <h1>Verificación de Coherencia<br><em>Semántica</em> para IA Distribuida</h1>
+  <p class="hero-sub">Validación de la Métrica Omega mediante Embeddings Multilingües</p>
+
+  <div class="auc-hero">
+    <div class="auc-number" id="aucCounter">0.00</div>
+    <div class="auc-label">AUC-ROC · Wikipedia Español · 1,000 pares</div>
+  </div>
+
+  <div class="hero-meta">
+    <div class="meta-item">
+      <span class="label">Autor</span>
+      <span class="value">Cristian Cano González</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">Institución</span>
+      <span class="value">Investigador Independiente</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">Lugar</span>
+      <span class="value">Orizaba, Veracruz, México</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">Fecha</span>
+      <span class="value">15 de mayo de 2026</span>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Desplázate para leer</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- RESUMEN -->
+<section class="section" id="s1" data-nav="Resumen">
+  <div class="section-num">00 · Resumen</div>
+  <div class="divider"></div>
+  <h2>¿De qué trata este paper?</h2>
+  <div class="abstract-box">
+    <p>Presentamos la validación experimental de Omega (Ω), una métrica de coherencia semántica diseñada para verificar la consistencia de fragmentos en redes de inferencia de IA distribuida. En estas redes, múltiples nodos voluntarios procesan fragmentos de una consulta de forma independiente, y un reintegrador debe determinar si los fragmentos devueltos son semánticamente consistentes antes de ensamblar la respuesta final.</p>
+  </div>
+  <p>Demostramos que el modelo de embeddings multilingüe <strong>paraphrase-multilingual-MiniLM-L12-v2</strong> discrimina pares de fragmentos coherentes de divergentes con un AUC-ROC de <strong>0.9539</strong> en un dataset de 1,000 pares reales de Wikipedia en español, superando significativamente el umbral de 0.85 requerido para la viabilidad del sistema.</p>
+  <div class="insight">
+    <strong>Hallazgo clave:</strong> la calidad del dataset es el factor crítico. El mismo modelo alcanza solo 0.55 AUC con datos sintéticos, subiendo a 0.91 con pares manuales y a <strong>0.9539 con datos reales de Wikipedia.</strong>
+  </div>
+</section>
+
+<!-- INTRODUCCIÓN -->
+<section class="section" id="s2" data-nav="Introducción">
+  <div class="section-num">01 · Introducción</div>
+  <div class="divider"></div>
+  <h2>El problema que resuelve</h2>
+  <p>Los modelos de lenguaje grandes actuales requieren enormes recursos computacionales concentrados en centros de datos controlados por pocas organizaciones. Esto limita el acceso para investigadores, instituciones y comunidades en regiones sin capital para adquirir esa infraestructura.</p>
+  <p>Sistemas como Petals y Bittensor han demostrado que redes de cómputo voluntario pueden correr colectivamente modelos demasiado grandes para cualquier máquina individual. Sin embargo, estos sistemas <strong>carecen de un mecanismo para verificar la coherencia semántica</strong> entre fragmentos procesados por diferentes nodos, un requisito crítico cuando los nodos pueden ser poco confiables, mal configurados o maliciosos.</p>
+
+  <div class="comparison">
+    <div class="comp-card before">
+      <span class="title">Mundo actual</span>
+      <ul>
+        <li>IA en servidores centralizados</li>
+        <li>Acceso por pago mensual</li>
+        <li>Reglas del dueño del servidor</li>
+        <li>Un país puede bloquearlo</li>
+        <li>Cómputo = capital</li>
+      </ul>
+    </div>
+    <div class="comp-card after">
+      <span class="title">Con esta arquitectura</span>
+      <ul>
+        <li>IA en la red como Wikipedia</li>
+        <li>Acceso sin intermediario</li>
+        <li>Reglas por consenso de nodos</li>
+        <li>No hay servidor que bloquear</li>
+        <li>Cómputo colectivo = capital</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- LA MÉTRICA -->
+<section class="section" id="s3" data-nav="Métrica Ω">
+  <div class="section-num">02 · La Métrica</div>
+  <div class="divider"></div>
+  <h2>La fórmula Omega (Ω)</h2>
+  <p>La métrica Ω combina múltiples señales semánticas en una sola puntuación de coherencia. Si Ω cae por debajo de 0.65, el fragmento es rechazado y reenrutado hacia un nodo alternativo.</p>
+
+  <div class="formula-box">
+    <div class="formula-main">Ω(A, B) = α · cos(A,B) + β · (1 − KL(A,B)) + γ · NLI(A,B)</div>
+    <div class="formula-desc">
+      <strong>cos(A,B)</strong> — similitud coseno entre embeddings semánticos<br>
+      <strong>KL(A,B)</strong> — divergencia KL entre distribuciones de probabilidad<br>
+      <strong>NLI(A,B)</strong> — inferencia de lenguaje natural (1.0=coherente, 0.0=contradicción)<br>
+      <strong>α + β + γ = 1.0</strong> · umbral de aceptación: <strong>Ω ≥ 0.65</strong>
+    </div>
+  </div>
+
+  <p>Para la Fase 0, nos enfocamos en la señal de similitud coseno usando embeddings de oraciones multilingüe, que resultó suficiente para superar el umbral de 0.85 AUC con datos reales. La Ω completa con NLI se propone para la validación de Fase 1.</p>
+</section>
+
+<!-- EXPERIMENTO -->
+<section class="section" id="s4" data-nav="Experimento">
+  <div class="section-num">03 · Experimento</div>
+  <div class="divider"></div>
+  <h2>Cómo se hizo el experimento</h2>
+
+  <h3>Construcción del dataset</h3>
+  <p>Se construyeron tres datasets de pares de fragmentos para evaluar el efecto de la calidad de los datos en el rendimiento de la métrica:</p>
+
+  <table class="results-table">
+    <tr>
+      <th>Dataset</th><th>Fuente</th><th>Pares</th><th>Balance</th>
+    </tr>
+    <tr><td>Sintético</td><td>Generación automática</td><td>995</td><td>400/595</td></tr>
+    <tr><td>Manual</td><td>45 pares elaborados a mano</td><td>45</td><td>25/20</td></tr>
+    <tr><td>Wikipedia</td><td>Wikipedia español 20231101</td><td>1,000</td><td>500/500</td></tr>
+  </table>
+
+  <p>Para el dataset de Wikipedia, los pares coherentes son oraciones consecutivas del mismo artículo, mientras que los pares divergentes son oraciones de artículos distintos. Esto garantiza etiquetas correctas sin anotación manual.</p>
+
+  <h3>Modelo y evaluación</h3>
+  <p>Se evaluó el modelo multilingüe <strong>paraphrase-multilingual-MiniLM-L12-v2</strong>. Este modelo produce embeddings de 384 dimensiones entrenado en datos de paráfrasis en más de 50 idiomas incluyendo español.</p>
+  <p>Todos los experimentos se corrieron en Google Colab con GPU Tesla T4 de 16GB. Tiempo total de GPU: aproximadamente 5 minutos para el experimento de Wikipedia.</p>
+</section>
+
+<!-- RESULTADOS -->
+<section class="section" id="s5" data-nav="Resultados">
+  <div class="section-num">04 · Resultados</div>
+  <div class="divider"></div>
+  <h2>Los números que importan</h2>
+
+  <table class="results-table">
+    <tr>
+      <th>Dataset</th><th>AUC-ROC</th><th>μ coherentes</th><th>μ divergentes</th><th>Separación</th><th>Estado</th>
+    </tr>
+    <tr>
+      <td>Sintético</td><td>0.5592</td><td>0.613</td><td>0.573</td><td>0.040</td>
+      <td class="fail">FALLA</td>
+    </tr>
+    <tr>
+      <td>Manual (45)</td><td>0.9060</td><td>0.842</td><td>0.365</td><td>0.477</td>
+      <td class="pass">PASA</td>
+    </tr>
+    <tr>
+      <td>Wikipedia (1,000)</td><td>0.9539</td><td>0.433</td><td>0.064</td><td>0.369</td>
+      <td class="pass">PASA ✓</td>
+    </tr>
+  </table>
+
+  <div style="margin:20px 0;">
+    <div class="auc-bar-label">
+      <span>Umbral mínimo requerido: 0.85</span>
+      <span id="barVal">0%</span>
+    </div>
+    <div class="auc-bar-wrap">
+      <div class="auc-bar" id="aucBar"></div>
+    </div>
+    <div class="auc-bar-label" style="margin-top:6px;">
+      <span style="color:var(--text3)">0.00</span>
+      <span style="color:var(--accent)">0.85 ← umbral</span>
+      <span style="color:var(--accent2)">0.9539 ← resultado</span>
+    </div>
+  </div>
+
+  <div class="result-card">
+    <div class="big-num">0.9539</div>
+    <div class="label">AUC-ROC · Wikipedia · 1,000 pares</div>
+    <div class="veredicto">✅ SISTEMA INMUNE FUNCIONA — avanzar a Fase 1</div>
+  </div>
+
+  <p>El experimento con Wikipedia produce AUC-ROC de 0.9539, sustancialmente por encima del umbral de 0.85. La similitud coseno promedio para pares coherentes (0.433) es 6.8 veces mayor que para pares divergentes (0.064), indicando una discriminación fuerte y confiable.</p>
+</section>
+
+<!-- DISCUSIÓN -->
+<section class="section" id="s6" data-nav="Discusión">
+  <div class="section-num">05 · Discusión</div>
+  <div class="divider"></div>
+  <h2>Qué significa este resultado</h2>
+
+  <h3>Para la IA distribuida</h3>
+  <p>La validación de Ω permite construir una red de inferencia distribuida donde la coherencia de fragmentos puede verificarse automáticamente y eficientemente. El modelo sentence-transformers requiere aproximadamente 2ms por par en GPU, muy dentro del presupuesto de latencia propuesto (objetivo: menos de 200ms de extremo a extremo para Fase 2).</p>
+
+  <div class="insight">
+    <strong>Implicación de seguridad:</strong> La fuerte discriminación lograda (AUC 0.9539) sugiere que incluso un nodo malicioso que devuelva contenido semánticamente plausible pero divergente sería detectado con alta probabilidad antes de integrarse en la respuesta final.
+  </div>
+
+  <h3>Limitaciones</h3>
+  <p>La validación actual usa pares a nivel de oración de texto enciclopédico. Los fragmentos de producción variarán en longitud, dominio y complejidad lingüística. La métrica debe validarse en corpus específicos de dominio (médico, legal, código) antes de desplegarse en esos contextos.</p>
+
+  <h3>La calidad del dataset como factor crítico</h3>
+  <p>La brecha de 40 puntos de AUC entre datos sintéticos (0.56) y Wikipedia (0.95) es el hallazgo más significativo de este experimento. Implica que los investigadores que validen métricas de coherencia semántica deben usar texto naturalmente generado, no pares sintéticos generados por reglas.</p>
+</section>
+
+<!-- TRABAJO RELACIONADO -->
+<section class="section" id="s7" data-nav="Trabajo relacionado">
+  <div class="section-num">06 · Trabajo relacionado</div>
+  <div class="divider"></div>
+  <h2>Qué existe y en qué nos diferenciamos</h2>
+
+  <p><strong>Petals</strong> distribuye capas de transformers en nodos voluntarios pero no verifica coherencia semántica entre nodos. <strong>Bittensor</strong> introduce incentivos económicos para inferencia distribuida pero usa precisión en benchmarks en lugar de coherencia semántica por pares.</p>
+
+  <p><strong>PARALLAX</strong> propone un scheduler de dos fases para pools de GPU voluntarias optimizando latencia y throughput, pero similarmente no incluye un mecanismo de verificación de coherencia semántica entre nodos.</p>
+
+  <div class="insight">
+    <strong>El trabajo más cercano es WISV</strong> (abril 2025), que propone verificación semántica informada por canal inalámbrico para decodificación especulativa distribuida. Nuestro trabajo difiere en tres aspectos clave: usamos redes de nodos voluntarios sobre internet general en lugar de enlaces inalámbricos, usamos embeddings de oraciones en lugar de estados ocultos internos, y validamos usando AUC-ROC en lugar de métricas de throughput.
+  </div>
+
+  <p>La contribución original es la aplicación de embeddings de oraciones multilingüe al problema específico de verificación de coherencia de fragmentos en inferencia distribuida en nodos voluntarios, y la demostración empírica de que alcanza el umbral AUC requerido para la viabilidad del sistema.</p>
+</section>
+
+<!-- CONCLUSIÓN -->
+<section class="section" id="s8" data-nav="Conclusión">
+  <div class="section-num">07 · Conclusión</div>
+  <div class="divider"></div>
+  <h2>Veredicto final</h2>
+
+  <p>Hemos validado que la coherencia semántica entre fragmentos de inferencia de IA distribuida puede medirse de forma confiable usando embeddings de oraciones multilingüe. En 1,000 pares reales de fragmentos de Wikipedia en español, el AUC-ROC de 0.9539 supera sustancialmente el umbral de viabilidad de 0.85, con una separación de clases de 0.369.</p>
+
+  <div class="result-card">
+    <div class="big-num">Fase 0</div>
+    <div class="label">aprobada · sistema inmune validado</div>
+    <div class="veredicto">Siguiente paso: prototipo de 3 nodos con Tailscale</div>
+  </div>
+
+  <p>Este resultado constituye la aprobación de la Fase 0 para el proyecto de red de inferencia de IA distribuida. La siguiente fase implementará un prototipo de 3 nodos con redes mesh Tailscale y validará la métrica Ω completa incorporando divergencia KL y señales NLI en corpus específicos de dominio.</p>
+</section>
+
+<!-- REFERENCIAS -->
+<section class="section" id="s9" data-nav="Referencias">
+  <div class="section-num">08 · Referencias</div>
+  <div class="divider"></div>
+  <h2>Fuentes citadas</h2>
+  <ul class="ref-list">
+    <li><span class="ref-num">[1]</span> Borzunov, A. et al. (2022). Petals: Collaborative Inference and Fine-tuning of Large Models. arXiv:2209.01188.</li>
+    <li><span class="ref-num">[2]</span> Bittensor (2023). A Peer-to-Peer Intelligence Market. bittensor.com.</li>
+    <li><span class="ref-num">[3]</span> Reimers, N. & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. EMNLP 2019. arXiv:1908.10084.</li>
+    <li><span class="ref-num">[4]</span> Wang, W. et al. (2020). MiniLM: Deep Self-Attention Distillation for Task-Agnostic Compression. NeurIPS 2020.</li>
+    <li><span class="ref-num">[5]</span> Ongaro, D. & Ousterhout, J. (2014). In Search of an Understandable Consensus Algorithm. USENIX ATC 2014.</li>
+    <li><span class="ref-num">[6]</span> Castro, M. & Liskov, B. (1999). Practical Byzantine Fault Tolerance. OSDI 1999.</li>
+    <li><span class="ref-num">[7]</span> GradientHQ (2025). PARALLAX: Efficient LLM Inference Service over Decentralized Environment. arXiv:2509.26182.</li>
+    <li><span class="ref-num">[8]</span> WISV (2025). Wireless-Informed Semantic Verification for Distributed Speculative Decoding. arXiv:2604.17701.</li>
+    <li><span class="ref-num">[9]</span> Lee, Y. et al. (2024). Embedding Byzantine Fault Tolerance into Federated Learning via Consistency Scoring Plugin. arXiv:2411.10212.</li>
+    <li><span class="ref-num">[10]</span> Wikimedia Foundation (2023). Wikipedia Spanish Dump 20231101. huggingface.co/datasets/wikimedia/wikipedia.</li>
+  </ul>
+</section>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-auc">0.9539</div>
+  <p>Cristian Cano González · Orizaba, Veracruz, México · 2026</p>
+  <p style="margin-top:8px;">Investigador Independiente · cs.DC · Inferencia Distribuida</p>
+</footer>
+
+<script>
+// Partículas
+const container = document.getElementById('particles');
+for (let i = 0; i < 25; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 3 + 1;
+  p.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random()*100}%;
+    animation-duration:${Math.random()*15+10}s;
+    animation-delay:${Math.random()*10}s;
+  `;
+  container.appendChild(p);
+}
+
+// Nav dots
+const sections = document.querySelectorAll('.section[data-nav]');
+const navDots = document.getElementById('navDots');
+sections.forEach((s, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'nav-dot';
+  dot.title = s.dataset.nav;
+  dot.onclick = () => s.scrollIntoView({ behavior: 'smooth' });
+  navDots.appendChild(dot);
+});
+
+// Scroll handlers
+const progress = document.getElementById('progress');
+const dots = document.querySelectorAll('.nav-dot');
+const allSections = document.querySelectorAll('.section');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.15 });
+allSections.forEach(s => observer.observe(s));
+
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const total = document.body.scrollHeight - window.innerHeight;
+  progress.style.width = (scrolled / total * 100) + '%';
+
+  // Nav dots activos
+  let current = 0;
+  sections.forEach((s, i) => {
+    if (s.getBoundingClientRect().top < window.innerHeight * 0.5) current = i;
+  });
+  dots.forEach((d, i) => d.classList.toggle('active', i === current));
+
+  // Activar barras cuando son visibles
+  const barSection = document.getElementById('s5');
+  if (barSection && barSection.getBoundingClientRect().top < window.innerHeight * 0.8) {
+    animateBar();
+  }
+});
+
+// Contador AUC en hero
+let aucDone = false;
+const aucEl = document.getElementById('aucCounter');
+function animateAUC() {
+  if (aucDone) return;
+  aucDone = true;
+  let start = 0;
+  const end = 0.9539;
+  const duration = 2000;
+  const startTime = performance.now();
+  function step(now) {
+    const t = Math.min((now - startTime) / duration, 1);
+    const eased = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+    aucEl.textContent = (start + (end - start) * eased).toFixed(4);
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+setTimeout(animateAUC, 1200);
+
+// Barra de AUC
+let barDone = false;
+function animateBar() {
+  if (barDone) return;
+  barDone = true;
+  const bar = document.getElementById('aucBar');
+  const val = document.getElementById('barVal');
+  setTimeout(() => {
+    bar.style.width = '95.39%';
+    let v = 0;
+    const iv = setInterval(() => {
+      v = Math.min(v + 1, 95);
+      val.textContent = v + '%';
+      if (v >= 95) clearInterval(iv);
+    }, 15);
+  }, 300);
+}
+</script>
+</body>
+</html>
