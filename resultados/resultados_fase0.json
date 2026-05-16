@@ -1,0 +1,12 @@
+{
+  "experimento": "Fase 0 validacion Omega",
+  "modelo": "paraphrase-multilingual-MiniLM-L12-v2",
+  "dataset": "Wikipedia espa\u00f1ol 20231101",
+  "n_pares": 1000,
+  "auc_roc": 0.9539,
+  "mu_coherentes": 0.433,
+  "mu_divergentes": 0.064,
+  "separacion": 0.369,
+  "umbral_meta": 0.85,
+  "veredicto": "APROBADO"
+}
