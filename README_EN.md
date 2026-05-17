@@ -1,67 +1,104 @@
-# 🧠 Distributed AI · Public Aqueduct of Knowledge
+# Distributed AI Omega
 
-**Current Status:** Phase 1 — Middleware Proxy Ω (Phase 0 validated: AUC 0.9539)
+Semantic verification system for distributed AI inference on volunteer nodes.
+Queries two Ollama nodes in parallel, measures semantic coherence Ω between their responses,
+and only returns if the score exceeds the threshold of 0.65.
 
-Intelligence should not be a privilege of centralized servers, but an emergent property
-of the network. This project builds a collective infrastructure where thousands of
-volunteer nodes execute fragmented inference in a private, verifiable, and manipulation-resistant way.
+**Validated metric: AUC-ROC = 0.9539** · Paper: https://doi.org/10.5281/zenodo.15520283
 
-## 🏗️ Architecture (Phase 1 in Development)
+---
 
-The project has evolved to integrate with **Exo** as the distributed inference engine,
-adding a semantic verification layer and a sovereign network infrastructure.
+## Quick Start
 
-### 🔧 Inference Engine: Exo
-[Exo](https://github.com/exo-explore/exo) handles automatic model sharding
-across heterogeneous devices (Mac, Linux, iOS). It provides the computational muscle
-without centralized servers.
+### On each machine that acts as a node
 
-### 🛡️ Immune System: Middleware Proxy Ω
-A semantic customs layer built on top of Exo:
-- **Real-time Validation:** every node response is analyzed by Ω
-  (experimentally validated AUC 0.9539) before reaching the user.
-- **FIX Protocol:** messages are packaged under the financial messaging standard
-  for full traceability and auditability of each fragment.
-- **2/3 Quorum:** triple redundancy with majority voting to discard
-  malicious nodes or hardware errors.
+**Mac / Linux:**
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull llama3.2:3b
+ollama serve
+```
 
-### 🌐 ISP-Grade Network Infrastructure
-- **VPN Mesh:** Tailscale/WireGuard for secure tunnels between volunteer nodes.
-- **ACO Routing:** ant colony algorithms that prioritize routes through nodes
-  with higher honesty history.
-- **Hardware Ready:** designed for MikroTik/Cisco equipment and adapted OSPF protocols.
+**Windows:**
+```powershell
+# Download and install from ollama.com
+ollama pull llama3.2:3b
+$env:OLLAMA_HOST="0.0.0.0"; ollama serve
+```
 
-## 📊 Current Status
+### Only on the machine running the proxy
 
-| Phase | Status | Key Metric |
-| :--- | :--- | :--- |
-| **Phase 0:** Ω Validation | ✅ Complete | AUC-ROC 0.9539 |
-| **Phase 1:** Middleware Proxy | 🔴 In Progress | Integration with Exo + FIX |
-| **Phase 2:** Scaling | ⚪ Planned | Latency p95 < 200ms |
-| **Phase 3:** Open Network | ⚪ Planned | >500 volunteer nodes |
+**Mac / Linux:**
+```bash
+git clone https://github.com/cibersincables-ops/ia-distribuida-omega
+cd ia-distribuida-omega
+pip3 install -r requirements.txt
+python3 scripts/omega_proxy.py --nodos "NODE1_IP:11434,NODE2_IP:11434" --puerto 8000
+```
 
-## 🧪 Phase 0: The Experiment
+**Windows:**
+```powershell
+git clone https://github.com/cibersincables-ops/ia-distribuida-omega
+cd ia-distribuida-omega
+pip install -r requirements.txt
+python scripts/omega_proxy.py --nodos "NODE1_IP:11434,NODE2_IP:11434" --puerto 8000
+```
 
-The Ω Formula was validated with sentence-transformers embeddings over 1,000 text pairs.
-- **AUC-ROC:** 0.9539
-- **Coherent mean Ω:** 0.433
-- **Divergent mean Ω:** 0.064
-- **Separation:** 0.369
+---
 
-## 📖 Full Documentation
+## Verify it works
 
-👉 **[Open complete architecture](docs/arquitectura.html)** — Tech stack, sequence diagrams,
-FIX protocol, privacy layers, roadmap (currently in Spanish).
+```bash
+curl http://localhost:8000/health
+```
 
-## 🤝 Contributing
+Expected response:
+```json
+{"ok": true}
+```
 
-The project is entering Phase 1. The most valuable contributions right now are:
-- **Middleware Proxy:** building the Ω validation layer over Exo.
-- **FIX Integration:** implementing the financial protocol for fragment traceability.
-- **ACO Routing:** simulating and testing ant colony algorithms on OSPF/BGP.
+## Make a query
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) and issues tagged `good first issue`.
+```bash
+curl http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"llama3.2:3b","messages":[{"role":"user","content":"Hello"}]}'
+```
 
-## 📄 License
+Response with Ω included:
+```json
+{
+  "choices": [{"message": {"content": "Hello, how can I help you?"}}],
+  "omega_meta": {"omega": 0.7155, "nodo": "192.168.0.102:11434", "verificado": true}
+}
+```
 
-[MIT](LICENSE) — Knowledge is public infrastructure.
+## Check proxy status
+
+```bash
+curl http://localhost:8000/status
+```
+
+---
+
+## Timeout note
+
+The proxy comes configured with `TIMEOUT_NODO = 90` seconds, optimized for nodes without GPU.
+If all your nodes have GPU you can lower it to 30 for faster responses:
+
+```python
+TIMEOUT_NODO = 30  # reduce if nodes have GPU
+```
+
+---
+
+## Additional documentation
+
+- `EXPERIMENTO.md` — empirical validation of the Ω metric, AUC 0.9539
+- `REGISTRO_SESION.md` — complete technical session log
+- Academic paper: https://doi.org/10.5281/zenodo.15520283
+
+---
+
+**Author:** Cristian Cano González · Orizaba, Veracruz, México · 2026
+**License:** MIT
