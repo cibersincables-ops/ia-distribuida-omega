@@ -1,121 +1,58 @@
-# IA Distribuida · Fase 0 · Validación de Ω
+IA Distribuida Omega
+Sistema de verificación semántica para inferencia de IA distribuida en nodos voluntarios.
+Consulta dos nodos Ollama en paralelo, mide coherencia semántica Ω entre sus respuestas
+y solo devuelve si supera el umbral de 0.65.
+Métrica validada: AUC-ROC = 0.9539 · Paper: https://doi.org/10.5281/zenodo.15520283
 
-## Resultado
+Inicio rápido
+Para cada máquina que sea nodo
+Mac / Linux:
+bashcurl -fsSL https://ollama.com/install.sh | sh
+ollama pull llama3.2:3b
+ollama serve
+Windows:
+powershell# Descargar e instalar desde ollama.com
+ollama pull llama3.2:3b
+$env:OLLAMA_HOST="0.0.0.0"; ollama serve
+Solo en la máquina que corre el proxy
+Mac / Linux:
+bashgit clone https://github.com/cibersincables-ops/ia-distribuida-omega
+cd ia-distribuida-omega
+pip3 install -r requirements.txt
+python3 scripts/omega_proxy.py --nodos "IP_NODO1:11434,IP_NODO2:11434" --puerto 8000
+Windows:
+powershellgit clone https://github.com/cibersincables-ops/ia-distribuida-omega
+cd ia-distribuida-omega
+pip install -r requirements.txt
+python scripts/omega_proxy.py --nodos "IP_NODO1:11434,IP_NODO2:11434" --puerto 8000
 
-```
-AUC-ROC:    0.9539  ✅ (meta: >0.85)
-Separación: 0.369
-Veredicto:  APROBADO — avanzar a Fase 1
-```
-
-## Qué se validó
-
-La fórmula Ω puede discriminar fragmentos semánticamente coherentes
-de fragmentos divergentes con AUC superior a 0.85 usando datos reales.
-
-**Modelo:** `paraphrase-multilingual-MiniLM-L12-v2` (sentence-transformers)
-**Dataset:** Wikipedia español 20231101 · 1,000 pares · 500/500 balance
-
-## Estructura
-
-```
-ia-distribuida-fase0/
-├── README.md                      ← este archivo
-├── data/
-│   └── dataset_wiki.jsonl         ← 1,000 pares reales de Wikipedia
-├── scripts/
-│   ├── generar_pares.py           ← genera el dataset (sintético o real)
-│   ├── omega_wiki.py              ← experimento principal · AUC 0.9539
-│   └── pares_manuales.py          ← 45 pares de control manual · AUC 0.906
-├── resultados/
-│   └── resultados_fase0.json      ← métricas finales
-└── docs/
-    └── (documentación adicional)
-```
-
-## Cómo reproducir el experimento
-
-### En Google Colab con GPU T4
-
-```python
-# Celda 1: instalar
-!pip install sentence-transformers scikit-learn -q
-
-# Celda 2: subir dataset_wiki.jsonl a la carpeta data/
-
-# Celda 3: correr
-!python scripts/omega_wiki.py
-```
-
-### Resultado esperado
-
-```
-AUC real: 0.9539  (meta: >0.85)
-Coherentes  mu= 0.433  n=500
-Divergentes mu= 0.064  n=500
-Separacion:     0.369
-✅ SISTEMA INMUNE FUNCIONA — avanzar a Fase 1
-```
-
-## Lo que aprendimos
-
-| Experimento | Modelo | Dataset | AUC |
-|-------------|--------|---------|-----|
-| Intento 1 | Phi-3 mini · activaciones | Sintético | 0.59 |
-| Intento 2 | Sentence-transformers | Sintético | 0.55 |
-| Intento 3 | Sentence-transformers | 45 pares manuales | 0.906 |
-| **Final** | **Sentence-transformers** | **Wikipedia real** | **0.9539** |
-
-**Conclusión:** La calidad del dataset es el factor crítico.
-Con datos reales y bien estructurados la métrica funciona claramente.
-
-## Dataset: dataset_wiki.jsonl
-
-Formato de cada línea:
-```json
-{
-  "texto_a": "...",
-  "texto_b": "...",
-  "etiqueta": 1,
-  "subgrupo": "A",
-  "tipo": "consecutivas"
+Verificar que funciona
+bashcurl http://localhost:8000/health
+Respuesta esperada:
+json{"ok": true}
+Hacer una consulta
+bashcurl http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"llama3.2:3b","messages":[{"role":"user","content":"Hola"}]}'
+Respuesta con Ω incluido:
+json{
+  "choices": [{"message": {"content": "Hola, en que puedo ayudarte?"}}],
+  "omega_meta": {"omega": 0.7155, "nodo": "192.168.0.102:11434", "verificado": true}
 }
-```
+Ver estado del proxy
+bashcurl http://localhost:8000/status
 
-- `etiqueta=1`: par coherente (oraciones consecutivas del mismo artículo)
-- `etiqueta=0`: par divergente (oraciones de artículos distintos)
-- `subgrupo A`: coherentes
-- `subgrupo B`: divergentes
+Nota sobre el timeout
+El proxy viene configurado con TIMEOUT_NODO = 90 segundos, optimizado para nodos sin GPU.
+Si todos tus nodos tienen GPU puedes bajarlo a 30 para respuestas más rápidas:
+pythonTIMEOUT_NODO = 30  # reducir si los nodos tienen GPU
 
-## Siguiente paso: Fase 1
+Documentación adicional
 
-Con la métrica Ω validada, el siguiente paso es implementar
-el prototipo de 3 nodos con Tailscale y verificar que el sistema
-completo funciona end-to-end.
+EXPERIMENTO.md — validación empírica de la métrica Ω, AUC 0.9539
+REGISTRO_SESION.md — diario técnico completo de la sesión
+Paper académico: https://doi.org/10.5281/zenodo.15520283
 
-Ver documentación completa en: `ia-distribuida-v3.html`
 
-🛠️ Evolución de la Arquitectura: Fase 1 (En Desarrollo)
-Originalmente planteada como una red desde cero, la arquitectura ha evolucionado para aprovechar la potencia de Exo como motor de inferencia distribuida, añadiendo una capa de control soberana basada en redes ISP.
-
-1. El Motor: Exo Integration
-
-Utilizaremos Exo para el "sharding" de modelos entre dispositivos (MacOS, Linux, iOS). Exo proporciona el músculo computacional, permitiendo que el Acueducto escale sin necesidad de servidores centralizados.
-
-2. El Sistema Inmune: Proxy Ω
-
-Sobre Exo, implementaremos un Middleware Proxy que actúa como una aduana semántica:
-
-Validación en Tiempo Real: Cada respuesta de los nodos es analizada por nuestra métrica Ω (validada al 95%) antes de llegar al usuario.
-
-Protocolo FIX: Los mensajes se empaquetan bajo el estándar de mensajería financiera FIX para asegurar trazabilidad y auditoría total de cada fragmento.
-
-3. Infraestructura de Red (Basado en ia-distribuida-v3.html)
-
-Para garantizar la resiliencia, el proyecto hereda conceptos de redes de nivel ISP:
-
-Capa de Transporte: Uso de VPNs Mesh (Tailscale/WireGuard) para crear un túnel seguro entre nodos voluntarios.
-
-Ruteo Dinámico (ACO): Implementación de algoritmos de colonia de hormigas para priorizar rutas a través de nodos con mayor historial de honestidad.
-
-Hardware Ready: El diseño contempla la integración en equipos MikroTik/Cisco para una gestión de tráfico eficiente mediante protocolos como OSPF adaptados.
+Autor: Cristian Cano González · Orizaba, Veracruz, México · 2026
+Licencia: MIT
