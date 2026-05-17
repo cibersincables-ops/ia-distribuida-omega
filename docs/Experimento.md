@@ -38,7 +38,7 @@ ia-distribuida-omega/
     ├── omega_wiki.py          ← experimento principal
     ├── generar_pares.py       ← genera el dataset
     └── pares_manuales.py      ← 45 pares de control
-
+```
 ## Cómo reproducir el experimento
 
 ### En Google Colab con GPU T4
