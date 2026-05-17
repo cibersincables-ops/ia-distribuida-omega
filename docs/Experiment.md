@@ -25,6 +25,7 @@ from divergent fragments with AUC above 0.85 using real-world data.
 ```
 ia-distribuida-omega/
 ├── README.md                  ← installation and quick start
+├── README_ES.md               ← instalación e inicio rápido
 ├── requirements.txt           ← proxy dependencies
 ├── data/
 │   └── dataset_wiki.jsonl     ← 1,000 real Wikipedia pairs
