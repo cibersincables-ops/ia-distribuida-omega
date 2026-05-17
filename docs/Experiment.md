@@ -24,19 +24,20 @@ from divergent fragments with AUC above 0.85 using real-world data.
 
 ```
 ia-distribuida-omega/
-├── README.md                      ← installation and quick start
-├── EXPERIMENT.md                  ← this file
-├── SESSION_LOG.md                 ← complete technical session log
-├── requirements.txt               ← proxy dependencies
+├── README.md                  ← installation and quick start
+├── requirements.txt           ← proxy dependencies
 ├── data/
-│   └── dataset_wiki.jsonl         ← 1,000 real Wikipedia pairs
-├── scripts/
-│   ├── omega_proxy.py             ← semantic verification proxy
-│   ├── omega_wiki.py              ← main experiment · AUC 0.9539
-│   ├── generar_pares.py           ← dataset generator (synthetic or real)
-│   └── pares_manuales.py          ← 45 manual control pairs · AUC 0.906
-└── resultados/
-    └── resultados_fase0.json      ← final metrics
+│   └── dataset_wiki.jsonl     ← 1,000 real Wikipedia pairs
+├── docs/
+│   ├── EXPERIMENTO.md         ← technical documentation Spanish
+│   └── EXPERIMENT.md          ← technical documentation English
+├── resultados/
+│   └── resultados_fase0.json  ← final metrics
+└── scripts/
+    ├── omega_proxy.py         ← semantic verification proxy
+    ├── omega_wiki.py          ← main experiment
+    ├── generar_pares.py       ← dataset generator
+    └── pares_manuales.py      ← 45 manual control pairs
 ```
 
 ## How to reproduce the experiment
