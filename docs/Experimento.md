@@ -25,6 +25,7 @@ de fragmentos divergentes con AUC superior a 0.85 usando datos reales.
 ```
 ia-distribuida-omega/
 ├── README.md                  ← instalación e inicio rápido
+├── README_EN.md               ← installation and quick start
 ├── requirements.txt           ← dependencias del proxy
 ├── data/
 │   └── dataset_wiki.jsonl     ← 1,000 pares reales de Wikipedia
