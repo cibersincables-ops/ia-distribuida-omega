@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Mac
+.DS_Store
+
+# Modelos grandes
+*.bin
+*.safetensors
+*.gguf
+
+# Logs del proxy
+*.log
